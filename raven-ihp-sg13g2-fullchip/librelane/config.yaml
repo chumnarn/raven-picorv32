@@ -1,0 +1,144 @@
+meta:
+  version: 3
+  flow: Chip
+
+DESIGN_NAME: chip_top
+VERILOG_FILES:
+  - dir::../rtl/chip_top.sv
+  - dir::../rtl/raven_chip_core.sv
+  - dir::../rtl/wrappers/raven_sram_1kx32.sv
+  - dir::../rtl/upstream/raven_soc.v
+  - dir::../rtl/upstream/raven_spi.v
+  - dir::../rtl/upstream/spi_slave.v
+
+VERILOG_INCLUDE_DIRS:
+  - dir::../rtl/upstream
+
+VERILOG_DEFINES: [FUNCTIONAL, USE_POWER_PINS, USE_IHP_SRAM]
+PRIMARY_GDSII_STREAMOUT_TOOL: klayout
+
+# 100 MHz Raven target.  Use --override-config CLOCK_PERIOD=20 for bring-up.
+CLOCK_PORT: clk_PAD
+CLOCK_NET: clk_pad/p2c
+CLOCK_PERIOD: 10.0
+PNR_SDC_FILE: dir::chip_top.sdc
+SIGNOFF_SDC_FILE: dir::chip_top.sdc
+FALLBACK_SDC: dir::chip_top.sdc
+
+VDD_NETS: [VDD]
+GND_NETS: [VSS]
+
+FP_SIZING: absolute
+DIE_AREA: [0, 0, 3200, 3200]
+CORE_AREA: [430, 430, 2770, 2770]
+PL_TARGET_DENSITY_PCT: 38
+GRT_ALLOW_CONGESTION: true
+MAX_FANOUT_CONSTRAINT: 12
+
+# Pad-ring order is clockwise.  Generated hierarchy names are escaped because
+# LibreLane receives them as regular expressions.
+PAD_SOUTH:
+  - clk_pad
+  - rst_n_pad
+  - "inputs\\[0\\].pad"
+  - "inputs\\[1\\].pad"
+  - "inputs\\[2\\].pad"
+  - "inputs\\[3\\].pad"
+  - "inputs\\[4\\].pad"
+  - iovdd_pad_0
+  - iovss_pad_0
+  - vdd_pad_0
+  - vss_pad_0
+
+PAD_EAST:
+  - "bidirs\\[0\\].pad"
+  - "bidirs\\[1\\].pad"
+  - "bidirs\\[2\\].pad"
+  - "bidirs\\[3\\].pad"
+  - "bidirs\\[4\\].pad"
+  - "bidirs\\[5\\].pad"
+  - "bidirs\\[6\\].pad"
+  - "bidirs\\[7\\].pad"
+  - "bidirs\\[8\\].pad"
+  - "bidirs\\[9\\].pad"
+  - iovdd_pad_1
+  - iovss_pad_1
+
+PAD_NORTH:
+  - cfg_sdo_pad
+  - "outputs\\[3\\].pad"
+  - "outputs\\[2\\].pad"
+  - "outputs\\[1\\].pad"
+  - "outputs\\[0\\].pad"
+  - "analogs\\[0\\].pad"
+  - "analogs\\[1\\].pad"
+  - "analogs\\[2\\].pad"
+  - "analogs\\[3\\].pad"
+  - "analogs\\[4\\].pad"
+  - "analogs\\[5\\].pad"
+  - "analogs\\[6\\].pad"
+  - "analogs\\[7\\].pad"
+
+PAD_WEST:
+  - "bidirs\\[19\\].pad"
+  - "bidirs\\[18\\].pad"
+  - "bidirs\\[17\\].pad"
+  - "bidirs\\[16\\].pad"
+  - "bidirs\\[15\\].pad"
+  - "bidirs\\[14\\].pad"
+  - "bidirs\\[13\\].pad"
+  - "bidirs\\[12\\].pad"
+  - "bidirs\\[11\\].pad"
+  - "bidirs\\[10\\].pad"
+  - vdd_pad_1
+  - vss_pad_1
+
+PAD_BONDPAD_NAME: bondpad_70x70_novias
+EXTRA_GDS:
+  - dir::../ip/bondpad_70x70_novias/gds/bondpad_70x70_novias.gds
+EXTRA_LEFS:
+  - dir::../ip/bondpad_70x70_novias/lef/bondpad_70x70_novias.lef
+IGNORE_DISCONNECTED_MODULES: [bondpad_70x70_novias]
+
+PDN_CORE_RING: true
+PDN_CORE_RING_CONNECT_TO_PADS: true
+PDN_ENABLE_PINS: false
+PDN_CORE_RING_VWIDTH: 15
+PDN_CORE_RING_HWIDTH: 15
+PDN_CORE_RING_VSPACING: 5
+PDN_CORE_RING_HSPACING: 5
+PDN_CFG: dir::pdn_cfg.tcl
+MAGIC_EXT_UNIQUE: notopports
+
+MACROS:
+  RM_IHPSG13_1P_1024x32_c2_bm_bist:
+    gds:
+      - pdk_dir::libs.ref/sg13g2_sram/gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds
+    lef:
+      - pdk_dir::libs.ref/sg13g2_sram/lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef
+    vh:
+      - pdk_dir::libs.ref/sg13g2_sram/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v
+      - pdk_dir::libs.ref/sg13g2_sram/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v
+    lib:
+      "*_typ_1p20V_25C":
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib
+      "*_fast_1p32V_m40C":
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib
+      "*_slow_1p08V_125C":
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib
+    instances:
+      u_core.u_sram.u_sram:
+        location: [1390, 1400]
+        orientation: N
+
+PDN_MACRO_CONNECTIONS:
+  - "u_core.u_sram.u_sram VDD VSS VDDARRAY! VSS!"
+  - "u_core.u_sram.u_sram VDD VSS VDD! VSS!"
+
+MAGIC_GDS_FLATGLOB:
+  - "lvsres_*"
+  - "VIA_M1_*"
+  - "VIA_M2_*"
+  - "*_CELL_CORNER"
+  - "RSC_*"
+  - "*_CELL_SUB"
