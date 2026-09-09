@@ -4,7 +4,7 @@
 // Adapter between Raven's scratchpad interface and the IHP 1 Ki x 32 SRAM.
 // Raven acknowledges a RAM request one cycle after it is presented.  The IHP
 // macro is synchronous, so A_DOUT is updated on the request clock edge.
-(* keep_hierarchy = "yes" *) module raven_sram_1kx32 (
+   module raven_sram_1kx32 (
     input  wire        clk,
     input  wire        wen_n,
     input  wire [3:0]  wstrb,
