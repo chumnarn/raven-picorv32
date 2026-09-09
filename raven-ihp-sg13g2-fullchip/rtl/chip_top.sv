@@ -68,10 +68,16 @@ module chip_top #(
         end
         for (genvar i = 0; i < NUM_ANALOG_PADS; i = i + 1) begin : analogs
             (* keep *) sg13g2_IOPadAnalog pad (
-                .iovdd(IOVDD), .iovss(IOVSS), .vdd(VDD), .vss(VSS),
-                .padres(analog_core[i]), .pad(analog_PAD[i])
-            );
+                      .iovdd (IOVDD),
+                      .iovss (IOVSS),
+                      .vdd   (VDD),
+                      .vss   (VSS),
+               .padres(analog_core[i]), 
+               .pad(analog_PAD[i])
+           );
         end
+
+     
     endgenerate
 
     (* keep *) sg13g2_IOPadTriOut30mA cfg_sdo_pad (
@@ -79,7 +85,7 @@ module chip_top #(
         .c2p(output_core[4]), .c2p_en(cfg_sdo_oe), .pad(output_PAD[4])
     );
 
-    (* keep_hierarchy = "yes" *) raven_chip_core u_core (
+        raven_chip_core u_core (
         .clk        (clk_core),
         .rst_n      (rst_n_core),
         .input_in   (input_core),

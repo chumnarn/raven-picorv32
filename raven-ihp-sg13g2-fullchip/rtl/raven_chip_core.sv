@@ -172,7 +172,7 @@ module raven_chip_core #(
         .flash_io3_di         (bidir_in[19])
     );
 
-    (* keep_hierarchy = "yes" *) raven_sram_1kx32 u_sram (
+     raven_sram_1kx32 u_sram (
         .clk   (clk),
         .wen_n (ram_wenb),
         .wstrb (ram_wstrb),
