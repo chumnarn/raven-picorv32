@@ -181,7 +181,7 @@ cd raven-ihp-sg13g2-fullchip
 nix-shell
 make setup
 
-chmod +x ./scripts/#.sh
+chmod +x ./scripts/*.sh
 
 make check
 make sim
