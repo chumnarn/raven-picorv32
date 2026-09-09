@@ -149,8 +149,21 @@ module raven_soc (
 	reg    [15:0] gpio_pu;		// GPIO pull-up enable
 	reg    [15:0] gpio_pd;		// GPIO pull-down enable
 	reg    [15:0] gpio_oeb;		// GPIO output enable (sense negative)
+	reg 	      adc0_ena;		// ADC0 enable
+	reg 	      adc0_convert;	// ADC0 convert
 	reg    [1:0]  adc0_clksrc;	// ADC0 clock source
+	reg    [1:0]  adc0_inputsrc;	// ADC0 input source
+	reg 	      adc1_ena;		// ADC1 enable
+	reg 	      adc1_convert;	// ADC1 convert
 	reg    [1:0]  adc1_clksrc;	// ADC1 clock source
+	reg    [1:0]  adc1_inputsrc;	// ADC1 input source
+	reg	      dac_ena;		// DAC enable
+	reg    [9:0]  dac_value;	// DAC output value
+	reg	      comp_ena;		// Comparator enable
+	reg    [1:0]  comp_ninputsrc;	// Comparator negative input source
+	reg    [1:0]  comp_pinputsrc;	// Comparator positive input source
+	reg	      rcosc_ena;	// RC oscillator enable
+	reg	      overtemp_ena;	// Over-temperature alarm enable
 	reg    [1:0]  comp_output_dest; // Comparator output destination
 	reg    [1:0]  rcosc_output_dest; // RC oscillator output destination
 	reg    [1:0]  overtemp_dest;	// Over-temperature alarm destination
@@ -159,6 +172,12 @@ module raven_soc (
 	reg    [1:0]  trap_output_dest; // Trap signal output destination
 	reg    [1:0]  irq_7_inputsrc;	// IRQ 5 source
 	reg    [1:0]  irq_8_inputsrc;	// IRQ 6 source
+	reg	      analog_out_sel;	// Analog output select
+ 	reg	      opamp_ena;	// Analog output op-amp enable
+ 	reg	      opamp_bias_ena;	// Analog output op-amp bias enable
+ 	reg	      bg_ena;		// Bandgap enable
+	wire	      adc0_clk;		// ADC0 clock (multiplexed)
+	wire	      adc1_clk;		// ADC1 clock (multiplexed)
 
 
 	// Reset assignment.  "reset" comes from POR, while "ext_reset"
@@ -254,16 +273,6 @@ module raven_soc (
 
 	wire irq_7, irq_8;
 
-	// PicoRV32 memory bus.
-	// Declare before SRAM interface assignments for Icarus Verilog.
-	wire        mem_valid;
-	wire        mem_instr;
-	wire        mem_ready;
-	wire [31:0] mem_addr;
-	wire [31:0] mem_wdata;
-	wire [ 3:0] mem_wstrb;
-	wire [31:0] mem_rdata;
-
 	assign irq_7 = (irq_7_inputsrc == 2'b01) ? gpio_in[0] :
 		       (irq_7_inputsrc == 2'b10) ? gpio_in[1] :
 		       (irq_7_inputsrc == 2'b11) ? gpio_in[2] : 1'b0;
@@ -294,6 +303,13 @@ module raven_soc (
 		irq[10] = overtemp_dest[0] & overtemp_dest[1] & overtemp;
 	end
 
+	wire mem_valid;
+	wire mem_instr;
+	wire mem_ready;
+	wire [31:0] mem_addr;
+	wire [31:0] mem_wdata;
+	wire [3:0] mem_wstrb;
+	wire [31:0] mem_rdata;
 
 	wire spimem_ready;
 	wire [31:0] spimem_rdata;
