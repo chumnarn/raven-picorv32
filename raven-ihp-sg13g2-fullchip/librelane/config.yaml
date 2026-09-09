@@ -15,6 +15,11 @@ VERILOG_INCLUDE_DIRS:
   - dir::../rtl/upstream
 
 VERILOG_DEFINES: [FUNCTIONAL, USE_POWER_PINS, USE_IHP_SRAM]
+
+VERILOG_POWER_DEFINE: USE_POWER_PINS
+
+EXTRA_VERILOG_MODELS:
+    - dir::../rtl/sg13g2_io_power.bb.v
 PRIMARY_GDSII_STREAMOUT_TOOL: klayout
 
 # 100 MHz Raven target.  Use --override-config CLOCK_PERIOD=20 for bring-up.
@@ -142,3 +147,7 @@ MAGIC_GDS_FLATGLOB:
   - "*_CELL_CORNER"
   - "RSC_*"
   - "*_CELL_SUB"
+
+# CTS/OpenROAD ODB-0445 workaround
+CTS_APPLY_NDR: none
+RUN_POST_CTS_RESIZER_TIMING: true
