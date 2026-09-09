@@ -172,6 +172,11 @@ Additional tools:
 ## 8. Quick start
 
 ```bash
+mkdir -p ~/labs
+cd ~labs
+git clone https://github.com/chumnarn/raven-picorv32.git
+cd ~/labs/raven-picorv32
+
 cd raven-ihp-sg13g2-fullchip
 nix-shell
 make setup
