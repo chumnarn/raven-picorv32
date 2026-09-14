@@ -185,6 +185,9 @@ chmod +x ./scripts/*.sh
 
 make check
 make sim
+
+make flow-nodrc
+
 make flow-50mhz
 make flow
 make ppa
